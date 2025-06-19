@@ -1,0 +1,18 @@
+URL: /
+Timestamp: Thu Jun 19 2025 14:20:48 GMT+0200 (Central European Summer Time)
+
+URL: /server.js
+Timestamp: Thu Jun 19 2025 14:20:48 GMT+0200 (Central European Summer Time)
+
+URL: /favicon.ico
+Timestamp: Thu Jun 19 2025 14:20:49 GMT+0200 (Central European Summer Time)
+
+URL: /document
+Timestamp: Thu Jun 19 2025 14:21:01 GMT+0200 (Central European Summer Time)
+
+URL: /server.js
+Timestamp: Thu Jun 19 2025 14:21:01 GMT+0200 (Central European Summer Time)
+
+URL: /favicon.ico
+Timestamp: Thu Jun 19 2025 14:21:02 GMT+0200 (Central European Summer Time)
+
