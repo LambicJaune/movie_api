@@ -1,11 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>TOM HANKS MOVIES API Documentation</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding-top: 20px;
+            }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        th,
+        td {
+            border: 1px solid #aaa;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #e8e8e8;
+        }
+        h1 {
+            margin-top: 0;
+        }
+
+        h2 {
+            margin: 40px 0 30px;
+        }
+    </style>
 </head>
+
 <body>
-<p>The web application provides users with access to information about different movies, directors, and genres. Users will be able to sign up, update their personal information, and create a list of their favorite movies.</p>
+
+    <h1>The Tom Hanks Movies API</h1>
+    <p>An API that returns data about movies featuring Tom Hanks : complete list of movies involving the actor,
+        movie description, genre (retrieved by name, e.g., "Comedy"), director (including data, e.g. bio, birth year,
+        death year), image URL, whether the movie if featured or not. Users can register as well as deregister,
+        update their user information, and add or remove movies from their list of favorites</p>
+
+    <h2> Movies Endpoints</h2>
+
+    <table>
+        <tr>
+            <th>Request</th>
+            <th>URL Endpoint</th>
+            <th>HTTP Method</th>
+            <th>Query Parameters</th>
+            <th>Request body data format</th>
+            <th>Response body data format</th>
+        </tr>
+
+        <tr>
+            <td>Returns a list of all movies</td>
+            <td>/movies</td>
+            <td>GET</td>
+            <td>None</td>
+            <td>None</td>
+            <td>An array of objects (movies)</td>
+        </tr>
+
+        <tr>
+            <td>Returns movie details by title</td>
+            <td>/movies/:title</td>
+            <td>GET</td>
+            <td>Movie title</td>
+            <td>None</td>
+            <td>A movie object displaying title, genre, director, description, imageURL, if featured of not</td>
+        </tr>
+
+        <tr>
+            <td>Returns movies by genre name</td>
+            <td>/genres/:genreName</td>
+            <td>GET</td>
+            <td>Genre name</td>
+            <td>None</td>
+            <td>An array of objects containing all the movies of the selected genre</td>
+        </tr>
+
+        <tr>
+            <td>Returns director information by name</td>
+            <td>/directors/:directorName</td>
+            <td>GET</td>
+            <td>Director's name</td>
+            <td>None</td>
+            <td>An object containing a director's data including bio, birth year, death year</td>
+        </tr>
+    </table>
+
+    <h2> Users Endpoints</h2>
+
+    <table>
+        <tr>
+            <th>Request</th>
+            <th>URL Endpoint</th>
+            <th>HTTP Method</th>
+            <th>Query Parameters</th>
+            <th>Request body data format</th>
+            <th>Response body data format</th>
+        </tr>
+
+        <tr>
+            <td>Register a new user</td>
+            <td>/users</td>
+            <td>POST</td>
+            <td>None</td>
+            <td>
+                A JSON object holding data about the user: <br> <br>
+                {<br>
+                "username": "john_doe",<br>
+                "email": "john@example.com",<br>
+                "password": "PW123!"<br>
+                }
+            </td>
+            <td>Confirmation message in plain text or created user object</td>
+        </tr>
+
+        <tr>
+            <td>Update user information</td>
+            <td>/users/:username</td>
+            <td>PUT</td>
+            <td>Current username</td>
+            <td>None</td>
+            <td>A text message indicating the updated user information</td>
+        </tr>
+
+        <tr>
+            <td>Add a movie to user’s favorites</td>
+            <td>/users/:username/favorites/:movieID</td>
+            <td>POST</td>
+            <td>Username, movieID</td>
+            <td>None</td>
+            <td>A text message indicating: "Movie added to your favorites"</td>
+        </tr>
+
+        <tr>
+            <td>Remove a movie from user’s favorites</td>
+            <td>/users/:username/favorites/:movieID</td>
+            <td>DELETE</td>
+            <td>Username, movieID</td>
+            <td>None</td>
+            <td>A text message indicating: "Movie removed from your favorites"</td>
+        </tr>
+
+        <tr>
+            <td>Deregister an existing user</td>
+            <td>/users/:id</td>
+            <td>DELETE</td>
+            <td>Username</td>
+            <td>None</td>
+            <td>A text message indicating: "You have been deregistered"</td>
+        </tr>
+    </table>
 </body>
+
 </html>
