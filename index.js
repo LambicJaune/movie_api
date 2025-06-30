@@ -271,13 +271,13 @@ app.post('/users', (req, res) => {
  *     "User name was updated to John Malkovitch"
  */
 app.put('/users/:userName', (req, res) => {
-    let user = users.find((user) => user.name === req.params.userName);
+    let user = users.find((user) => user.name === req.params.name);
 
     if (user) {
         user.name = req.body.name;
         res.status(200).send('User name was updated to ' + req.body.name);
     } else {
-        res.status(404).send('User with the name ' + req.params.userName + ' was not found.');
+        res.status(404).send('User with the name ' + req.params.name + ' was not found.');
     }
 });
 
@@ -321,17 +321,17 @@ app.delete('/users/:id', (req, res) => {
  * @example Response:
  *     "Movie 02 was added to John Doe's favorites."
  */
-app.post('/users/:userName/favorites/:movieID', (req, res) => {
-    let userName = req.params.userName;
+app.post('/users/:name/favorites/:movieID', (req, res) => {
+    let name = req.params.name;
     let movieID = req.params.movieID;
 
     // Find the user by name
     let user = users.find(function (user) {
-        return user.name === userName;
+        return user.name === name;
     });
 
     if (!user) {
-        res.status(404).send('User with the name ' + userName + ' was not found.');
+        res.status(404).send('User with the name ' + name + ' was not found.');
         return;
     }
 
@@ -342,7 +342,7 @@ app.post('/users/:userName/favorites/:movieID', (req, res) => {
 
     // Add movie to favorites
     user.favorites.push(movieID);
-    res.status(200).send('Movie ' + movieID + ' was added to ' + userName + '\'s favorites.');
+    res.status(200).send('Movie ' + movieID + ' was added to ' + name + '\'s favorites.');
 });
 
 /**
@@ -360,22 +360,22 @@ app.post('/users/:userName/favorites/:movieID', (req, res) => {
  *     "Movie 02 was removed from your favorites."
  */
 app.delete('/users/:userName/favorites/:movieID', (req, res) => {
-    let userName = req.params.userName;
+    let name = req.params.name;
     let movieID = req.params.movieID;
 
     // Find the user by name
     let user = users.find(function (user) {
-        return user.name === userName;
+        return user.name === name;
     });
 
     if (!user) {
-        res.status(404).send('User with the name ' + userName + ' was not found.');
+        res.status(404).send('User with the name ' + name + ' was not found.');
         return;
     }
 
     // Check if user has movies already listed in favorites
     if (!user.favorites || user.favorites.length === 0) {
-        res.status(400).send('User ' + userName + ' has no favorite movies.');
+        res.status(400).send('User ' + name + ' has no favorite movies.');
         return;
     }
 
