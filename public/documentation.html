@@ -78,7 +78,7 @@
 
         <tr>
             <td>Returns movies by genre name</td>
-            <td>/genres/:genreName</td>
+            <td>/genres/:genre.name</td>
             <td>GET</td>
             <td>Genre name</td>
             <td>None</td>
@@ -87,7 +87,7 @@
 
         <tr>
             <td>Returns director information by name</td>
-            <td>/directors/:directorName</td>
+            <td>/directors/:director.name</td>
             <td>GET</td>
             <td>Director's name</td>
             <td>None</td>
@@ -152,9 +152,9 @@
 
         <tr>
             <td>Deregister an existing user</td>
-            <td>/users/:id</td>
+            <td>/users/:_id</td>
             <td>DELETE</td>
-            <td>UserName</td>
+            <td>Username</td>
             <td>None</td>
             <td>A text message indicating: "You have been deregistered"</td>
         </tr>
