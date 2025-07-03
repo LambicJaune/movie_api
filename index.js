@@ -1,143 +1,20 @@
+const mongoose = require('mongoose');
+const Models = require('./models.js');
+
+const Movies = Models.Movie;
+const Users = Models.User;
+
+mongoose.connect('mongodb://localhost:27017/TomHanksAppDB', { useNewUrlParser: true, useUnifiedTopology: true });
+
 const express = require('express'),
     app = express(),
     //logging middleware
     morgan = require('morgan'),
     uuid = require('uuid');
 
-const movies = [
-    {
-        title: 'Forrest Gump',
-        director: 'Robert Zemeckis',
-        genres: 'drama',
-        description: '',
-        imageURL: '',
-        movieID: '01'
-    },
-    {
-        title: 'The Green Mile',
-        director: 'Frank Darabont',
-        genres: 'crime',
-        description: '',
-        imageURL: '',
-        movieID: '02'
-    },
-    {
-        title: 'Cast Away',
-        director: 'Robert Zemeckis',
-        genres: 'adventure',
-        description: '',
-        imageURL: '',
-        movieID: '03'
-    },
-    {
-        title: 'Philadelphia',
-        director: 'Jonathan Demme',
-        genres: 'drama',
-        description: '',
-        imageURL: '',
-        movieID: '04'
-    },
-    {
-        title: 'Road to Perdition',
-        director: 'Sam Mendes',
-        genres: 'crime',
-        description: '',
-        imageURL: '',
-        movieID: '05'
-    },
-    {
-        title: 'Catch Me If You Can',
-        director: 'Steven Spielberg',
-        genres: 'biography',
-        description: '',
-        imageURL: '',
-        movieID: '06'
-    },
-    {
-        title: 'The Terminal',
-        director: 'Steven Spielberg',
-        genres: 'comedy',
-        description: '',
-        imageURL: '',
-        movieID: '07'
-    },
-    {
-        title: 'The Da Vinci Code',
-        director: 'Ron Howard',
-        genres: 'mystery',
-        description: '',
-        imageURL: '',
-        movieID: '08'
-    },
-    {
-        title: 'Big',
-        director: 'Penny Marshall',
-        genres: 'fantasy',
-        description: '',
-        imageURL: '',
-        movieID: '09'
-    },
-    {
-        title: 'Sully',
-        director: 'Clint Eastwood',
-        genres: 'biography',
-        description: '',
-        imageURL: '',
-        movieID: '10'
-    }];
-
-const directors = [
-    {
-        name: 'Robert Zemeckis',
-        bio: '',
-        birth: 1951,
-        death: 'still alive'
-    },
-    {
-        name: 'Frank Darabont',
-        bio: '',
-        birth: 1959,
-        death: 'still alive'
-    },
-    {
-        name: 'Jonathan Demme',
-        bio: '',
-        birth: 1944,
-        death: 2017,
-    },
-    {
-        name: 'Sam Mendes',
-        bio: '',
-        birth: 1965,
-        death: 'still alive'
-    },
-    {
-        name: 'Steven Spielberg',
-        bio: '',
-        birth: 1946,
-        death: 'still alive'
-    },
-    {
-        name: 'Ron Howard',
-        bio: '',
-        birth: 1954,
-        death: 'still alive'
-    },
-    {
-        name: 'Penny Marshall',
-        bio: '',
-        birth: 1943,
-        death: 2018
-    },
-    {
-        name: 'Clint Eastwood',
-        bio: '',
-        birth: 1930,
-        death: 'still alive'
-    }
-];
-
-let users = [];
+//imports body-parser
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(morgan('common'));
 
@@ -153,8 +30,15 @@ app.get('/', (req, res) => {
 });
 
 //get all movies
-app.get('/movies', (req, res) => {
-    res.json(movies);
+app.get('/movies', async (req, res) => {
+    await Movies.find()
+        .then((movies) => {
+            res.status(201).json(movies);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
 });
 /**
  * Get movie by title
@@ -163,153 +47,311 @@ app.get('/movies', (req, res) => {
  * @param {string} title.path.required - Title of the movie to retrieve
  * @returns {object} 200 - JSON object of the matching movie
  * @returns {Error} 404 - Movie not found
+ * @returns {Error} 500 - Internal server error
  * @example Request:
  *     GET /movies/Sully
  * @example Response:
  *     {
  *       "title": "Sully",
- *       "director": "Clint Eastwood",
- *       "genres": biography
+ *       "director": {
+ *          "name": "Clint Eastwood",
+ *          "bio": "...",
+ *          "birth": 1930
+ *       },
+ *       "genres": [
+ *          {
+ *            "name": "Biography",
+ *            "description": "..."
+ *          }
+ *       ],
+ *       "description": "The story of Chesley 'Sully' Sullenberger...",
+ *       "imageURL": "http://example.com/image.jpg",
+ *       "featured": true
  *     }
  */
-app.get('/movies/:title', (req, res) => {
-    res.json(movies.find((movie) => { return movie.title === req.params.title }))
+app.get('/movies/:title', async (req, res) => {
+    await Movies.findOne({ title: req.params.title })
+        .then((movie) => {
+            res.status(200).json(movie);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
 });
+
 /**
- * get a list of movies by genre
+ * Get a list of movies by genre
  * @route GET /genres/:genreName
  * @group Genres - Operations related to movie genres
  * @param {string} genreName.path.required - Name of the genre to filter movies by
  * @returns {Array.<object>} 200 - List of movies matching the genre
  * @returns {Error} 404 - No movies found for the given genre
+ * @returns {Error} 500 - Internal server error
  * @example Request:
- *     GET /genres/biography
+ *     GET /genres/Biography
  * @example Response:
  *     [
- *      {
- *         "title": 'Catch Me If You Can',
-           "director": 'Steven Spielberg',
-           "genres": 'biography',
-         }
+ *       {
+ *         "title": "Catch Me If You Can",
+ *         "director": {
+ *           "name": "Steven Spielberg",
+ *           "bio": "...",
+ *           "birth": 1946
+ *         },
+ *         "genres": [
+ *           {
+ *             "name": "Biography",
+ *             "description": "..."
+ *           }
+ *         ],
+ *         "description": "...",
+ *         "imageURL": "http://example.com/image.jpg",
+ *         "featured": false
+ *       },
  *       {
  *         "title": "Sully",
- *         "director": "Clint Eastwood",
- *         "genres": "biography",
+ *         "director": {
+ *           "name": "Clint Eastwood",
+ *           "bio": "...",
+ *           "birth": 1930
+ *         },
+ *         "genres": [
+ *           {
+ *             "name": "Biography",
+ *             "description": "..."
+ *           }
+ *         ],
+ *         "description": "...",
+ *         "imageURL": "http://example.com/image2.jpg",
+ *         "featured": true
  *       }
  *     ]
  */
-app.get('/genres/:genreName', (req, res) => {
-    res.json(movies.filter((movie) => { return movie.genres === req.params.genreName }))
+app.get('/genres/:genreName', async (req, res) => {
+    await Movies.find({ 'genre.name': req.params.genreName })
+        .then((movie) => {
+            res.status(200).json(movie);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
+});
+
+
+/**
+ * Get all movies directed by a specific director
+ * @route GET /directors/:directorName/movies
+ * @group Movies - Operations related to movies
+ * @param {string} directorName.path.required - Name of the director to filter movies by
+ * @returns {Array.<object>} 200 - An array of movie objects directed by the specified director
+ * @returns {Error} 500 - Internal server error
+ * @example Request:
+ *     GET /directors/Sam%20Mendes/movies
+ * @example Response:
+ *     [
+ *       {
+ *         "genre": {
+ *           "name": "Crime",
+ *           "description": "Crime films portray illegal acts..."
+ *         },
+ *         "director": {
+ *           "name": "Sam Mendes",
+ *           "bio": "British director known for...",
+ *           "birth": "1965-08-01",
+ *           "death": ""
+ *         },
+ *         "_id": "68639866fdce14bfc0748a63",
+ *         "title": "Road to Perdition",
+ *         "description": "A mob enforcer's son witnesses a murder...",
+ *         "imagePath": "https://example.com/image.jpg",
+ *         "featured": false
+ *       }
+ *     ]
+ */
+app.get('/directors/:directorName/movies', async (req, res) => {
+    await Movies.find({ 'director.name': req.params.directorName })
+        .then((movie) => {
+            res.status(200).json(movie);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
 });
 
 /**
- * get a list of deatails about a director
+ * Get details about a director
  * @route GET /directors/:directorName
  * @group Directors - Operations related to movie directors
  * @param {string} directorName.path.required - Name of the director to retrieve
- * @returns {object} 200 - JSON object of the matching director
+ * @returns {object} 200 - JSON object of the matching director's info
  * @returns {Error} 404 - Director not found
+ * @returns {Error} 500 - Internal server error
  * @example Request:
  *     GET /directors/Clint%20Eastwood
  * @example Response:
  *     {
- *       "name": 'Clint Eastwood',
- *       "bio": '',
- *       "birth": '1930',
- *       "death": 'still alive'
+ *       "name": "Clint Eastwood",
+ *       "bio": "An American actor and filmmaker known for...",
+ *       "birth": 1930,
+ *       "death": null
  *     }
  */
-app.get('/directors/:directorName', (req, res) => {
-    res.json(directors.find((director) => { return director.name === req.params.directorName }))
+app.get('/directors/:directorName', async (req, res) => {
+    await Movies.findOne({ 'director.name': req.params.directorName })
+        .then((movie) => {
+            if (!movie) {
+                return res.status(404).send('Director not found');
+            }
+            res.status(200).json(movie.director);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
 });
 
+
 /**
- * registers/adds a new user
+ * Registers/adds a new user
  * @route POST /users
  * @group Users - Operations related to users
  * @param {object} user.body.required - The new user object
- * @param {string} user.name.required - Name of the user
- * @returns {object} 201 - The newly created user
- * @returns {Error} 400 - Missing required fields
+ * @param {string} user.Username.required - Username of the new user
+ * @param {string} user.Password.required - Password for the user account
+ * @param {string} user.Email.required - Email address of the user
+ * @param {string} user.Birthday.required - Birthday in ISO format (e.g. "1990-01-01")
+ * @param {Array.<string>} [user.FavoriteMovies] - Array of movie ObjectIds as strings
+ * @returns {object} 201 - The newly created user object
+ * @returns {Error} 400 - Username already exists or missing required fields
+ * @returns {Error} 500 - Internal server error
  * @example Request:
  *     {
- *       "name": "John Doe"
+ *       "Username": "john_doe",
+ *       "Password": "PW123!",
+ *       "Email": "john@example.com",
+ *       "Birthday": "1990-01-01",
+ *       "FavoriteMovies": ["68639866fdce14bfc0748a5f", "68639866fdce14bfc0748a60"]
  *     }
  * @example Response:
  *     {
- *       "id": "71c82a05-734b-4bb6-8205-fd4ed0f26d91",
- *       "name": "John Doe"
+ *       "_id": "60d21b4667d0d8992e610c85",
+ *       "Username": "john_doe",
+ *       "Email": "john@example.com",
+ *       "Birthday": "1990-01-01T00:00:00.000Z",
+ *       "FavoriteMovies": ["68639866fdce14bfc0748a5f", "68639866fdce14bfc0748a60"]
  *     }
  */
-app.post('/users', (req, res) => {
-    let newUser = req.body;
-
-    if (!newUser.name) {
-        const message = 'Missing name in request body';
-        res.status(400).send(message);
-    } else {
-        newUser.id = uuid.v4();
-        users.push(newUser);
-        res.status(201).send(newUser);
-    }
+app.post('/users', async (req, res) => {
+    await Users.findOne({ Username: req.body.Username })
+        .then((user) => {
+            if (user) {
+                return res.status(400).send(req.body.Username + ' already exists');
+            } else {
+                Users
+                    .create({
+                        Username: req.body.Username,
+                        Password: req.body.Password,
+                        Email: req.body.Email,
+                        Birthday: req.body.Birthday,
+                        /*FavoriteMovies: req.body.FavoriteMovies*/
+                    })
+                    .then((user) => { res.status(201).json(user) })
+                    .catch((error) => {
+                        console.error(error);
+                        res.status(500).send('Error: ' + error);
+                    })
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
+        });
 });
 
 /**
- * updates a user's name
+ * Updates a user's information (including username)
  * @route PUT /users/:userName
  * @group Users - Operations related to users
- * @param {string} userName.path.required - The current name of the user
- * @param {string} name.body.required - The new name for the user
- * @returns {string} 200 - Confirmation that the name was updated
+ * @param {string} userName.path.required - The current username of the user
+ * @param {object} user.body.required - The updated user data
+ * @param {string} [user.Username] - The new username for the user
+ * @param {string} [user.Password] - The new password for the user
+ * @param {string} [user.Email] - The new email for the user
+ * @param {string} [user.Birthday] - The new birthday (ISO date string)
+ * @param {Array.<string>} [user.FavoriteMovies] - The new array of favorite movie ObjectId strings
+ * @returns {object} 200 - The updated user object
  * @returns {Error} 404 - User not found
+ * @returns {Error} 500 - Internal server error
  * @example Request:
- *     PUT /users/John%20Doe
+ *     PUT /users/JohnDoe
  *     {
- *       "name": "John Malkovitch"
+ *       "Username": "JohnMalkovitch",
+ *       "Email": "johnm@example.com"
  *     }
  * @example Response:
- *     "User name was updated to John Malkovitch"
+ *     {
+ *       "_id": "60d21b4667d0d8992e610c85",
+ *       "Username": "JohnMalkovitch",
+ *       "Email": "johnm@example.com",
+ *       "Birthday": "1990-01-01T00:00:00.000Z",
+ *       "FavoriteMovies": ["68639866fdce14bfc0748a5f"]
+ *     }
  */
-app.put('/users/:userName', (req, res) => {
-    let user = users.find((user) => user.name === req.params.name);
+app.put('/users/:userName', async (req, res) => {
+    await Users.findOneAndUpdate({ Username: req.params.userName }, {
+        $set:
+        {
+            Username: req.body.Username,
+            Password: req.body.Password,
+            Email: req.body.Email,
+            Birthday: req.body.Birthday,
+            FavoriteMovies: req.body.FavoriteMovies
+        }
+    },
+        { new: true }) // This line makes sure that the updated document is returned
+        .then((updatedUser) => {
+            res.json(updatedUser);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        })
 
-    if (user) {
-        user.name = req.body.name;
-        res.status(200).send('User name was updated to ' + req.body.name);
-    } else {
-        res.status(404).send('User with the name ' + req.params.name + ' was not found.');
-    }
 });
 
 /**
- * deletes a user
- * @route DELETE /users/:id
+ * Deletes a user
+ * @route DELETE /users/:userName
  * @group Users - Operations related to users
- * @param {string} id.path.required - ID of the user to delete
+ * @param {string} userName.path.required - userName of the user to delete
  * @returns {string} 200 - Confirmation message
  * @returns {Error} 404 - User not found
  * @example Request:
- *     DELETE /users/71c82a05-734b-4bb6-8205-fd4ed0f26d91
+ *     DELETE /users/JohnDoe
  * @example Response:
- *     "User 71c82a05-734b-4bb6-8205-fd4ed0f26d91 was deleted."
+ *     "User JohnDoe was deleted."
  */
-
-app.delete('/users/:id', (req, res) => {
-    let user = users.find((user) => { return user.id === req.params.id });
-
-    if (user) {
-        users = users.filter((obj) => { return obj.id !== req.params.id });
-        res.status(200).send('User ' + req.params.id + ' was deleted.');
-    }
-    else {
-        return res.status(404).send('User with the ID ' + req.params.id + ' was not found.');
-
-    }
+app.delete('/users/:userName', async (req, res) => {
+    await Users.findOneAndRemove({ Username: req.params.userName })
+        .then((user) => {
+            if (!user) {
+                res.status(400).send(req.params.userName + ' was not found');
+            } else {
+                res.status(200).send(req.params.userName + ' was deleted.');
+            }
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
 });
 
 
 /**
- * adds a movie to a user's favorites
+ * Adds a movie to a user's favorites
  * @route POST /users/:userName/favorites/:movieID
  * @group Users - Operations related to users
  * @param {string} userName.path.required - Name of the user
@@ -317,80 +359,50 @@ app.delete('/users/:id', (req, res) => {
  * @returns {string} 200 - Confirmation that the movie was added
  * @returns {Error} 404 - User not found
  * @example Request:
- *     POST /users/John%20Doe/favorites/02
+ *     POST /users/JohnDoe/favorites/02
  * @example Response:
- *     "Movie 02 was added to John Doe's favorites."
+ *     "Movie 02 was added to JohnDoe's favorites."
  */
-app.post('/users/:name/favorites/:movieID', (req, res) => {
-    let name = req.params.name;
-    let movieID = req.params.movieID;
-
-    // Find the user by name
-    let user = users.find(function (user) {
-        return user.name === name;
-    });
-
-    if (!user) {
-        res.status(404).send('User with the name ' + name + ' was not found.');
-        return;
-    }
-
-    // Initialize the favorites array if it doesn't already exist
-    if (!user.favorites) {
-        user.favorites = [];
-    }
-
-    // Add movie to favorites
-    user.favorites.push(movieID);
-    res.status(200).send('Movie ' + movieID + ' was added to ' + name + '\'s favorites.');
+app.post('/users/:userName/favorites/:MovieID', async (req, res) => {
+    await Users.findOneAndUpdate({ Username: req.params.userName }, {
+        $push: { FavoriteMovies: req.params.MovieID }
+    },
+        { new: true }) // This line makes sure that the updated document is returned
+        .then((updatedUser) => {
+            res.json(updatedUser);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
 });
 
+
 /**
- * removes movie from favorites
- * @route POST /users/:userName/favorites/:movieID
+ * Removes a movie from user's favorites
+ * @route DELETE /users/:userName/favorites/:movieID
  * @group Users - Operations related to users
  * @param {string} userName.path.required - Name of the user
- * @param {string} movieID.path.required - ID of the movie to add to favorites
+ * @param {string} movieID.path.required - ID of the movie to remove from favorites
  * @returns {string} 200 - Confirmation that the movie was removed
- * @returns {Error} 404 - User not found / movie not found in favorites
- * @returns {Error} 400 - favorite not found
+ * @returns {Error} 404 - User not found or movie not found in favorites
  * @example Request:
- *     DELETE /users/John%20Doe/favorites/02
+ *     DELETE /users/JohnDoe/favorites/02
  * @example Response:
  *     "Movie 02 was removed from your favorites."
  */
-app.delete('/users/:userName/favorites/:movieID', (req, res) => {
-    let name = req.params.name;
-    let movieID = req.params.movieID;
-
-    // Find the user by name
-    let user = users.find(function (user) {
-        return user.name === name;
-    });
-
-    if (!user) {
-        res.status(404).send('User with the name ' + name + ' was not found.');
-        return;
-    }
-
-    // Check if user has movies already listed in favorites
-    if (!user.favorites || user.favorites.length === 0) {
-        res.status(400).send('User ' + name + ' has no favorite movies.');
-        return;
-    }
-
-    // Check if the movie is in favorites
-    if (!user.favorites.includes(movieID)) {
-        res.status(404).send('Movie ' + movieID + ' is not in your favorites.');
-        return;
-    }
-
-    // Remove the movie from favorites
-    user.favorites = user.favorites.filter(function (id) {
-        return id !== movieID;
-    });
-
-    res.status(200).send('Movie ' + movieID + ' was removed from your favorites.');
+app.delete('/users/:userName/favorites/:MovieID', async (req, res) => {
+    await Users.findOneAndUpdate({ Username: req.params.userName }, {
+        $pull: { FavoriteMovies: req.params.MovieID }
+    },
+        { new: true }) // This line makes sure that the updated document is returned
+        .then((updatedUser) => {
+            res.json(updatedUser);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
 });
 
 //handles errors
