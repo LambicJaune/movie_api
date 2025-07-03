@@ -10,7 +10,7 @@
         body {
             font-family: Arial, sans-serif;
             padding-top: 20px;
-            }
+        }
 
         table {
             border-collapse: collapse;
@@ -28,6 +28,7 @@
         th {
             background-color: #e8e8e8;
         }
+
         h1 {
             margin-top: 0;
         }
@@ -64,34 +65,158 @@
             <td>GET</td>
             <td>None</td>
             <td>None</td>
-            <td>An array of objects (movies)</td>
+            <td>An array of objects (movies). Example : <br><br>
+                { "title": "Forrest Gump", "genre": { "name": "Drama", "description": "..." }, "director": { "name":
+                "Robert Zemeckis", "bio": "...", "birth": "1952-05-14", "death": "" }, "description": "A slow-witted
+                man...", "imagePath": "url", "featured": true }</td>
         </tr>
 
         <tr>
             <td>Returns movie details by title</td>
             <td>/movies/:title</td>
             <td>GET</td>
-            <td>Movie title</td>
+            <td>Movie title as URL param</td>
             <td>None</td>
-            <td>A movie object displaying title, genre, director, description, imageURL, if featured of not</td>
+            <td>A movie object displaying title, genre, director, description, imageURL, if featured of not. Example :
+                <br><br>
+
+                {
+                "genre": {
+                "name": "Biography",
+                "description": "Biographical films depict the life and achievements of real people, highlighting
+                personal struggles, societal contributions, and pivotal historical moments."
+                },
+                "director": {
+                "name": "Clint Eastwood",
+                "bio": "Clint Eastwood is a renowned actor and director known for his contributions to American cinema,
+                particularly in westerns and drama. His directing is marked by efficient storytelling and moral
+                complexity.",
+                "birth": "1930-05-31",
+                "death": ""
+                },
+                "_id": "68639866fdce14bfc0748a68",
+                "title": "Sully",
+                "description": "After a forced water landing on the Hudson River, Captain Chesley 'Sully' Sullenberger
+                faces public scrutiny and investigation while defending his life-saving actions.",
+                "imagePath":
+                "https://xl.movieposterdb.com/22_04/2016/3263904/xl_3263904_430534c9.jpg?v=2025-02-02%2012:06:07",
+                "featured": false
+                }
+            </td>
         </tr>
 
         <tr>
             <td>Returns movies by genre name</td>
-            <td>/genres/:genre.name</td>
+            <td>/genres/:genreName</td>
             <td>GET</td>
-            <td>Genre name</td>
+            <td>Genre name as URL param</td>
             <td>None</td>
-            <td>An array of objects containing all the movies of the selected genre</td>
+            <td>An array of objects containing all the movies of the selected genre. Example : <br><br>
+                [
+                {
+                "genre": {
+                "name": "Drama",
+                "description": "Drama films focus on realistic storytelling, often portraying intense character
+                development, emotional themes, and personal conflict. They explore social, psychological, or moral
+                struggles in depth."
+                },
+                "director": {
+                "name": "Robert Zemeckis",
+                "bio": "Robert Zemeckis is an acclaimed American filmmaker known for blending technical innovation with
+                strong storytelling. He has directed numerous successful films across genres, often incorporating
+                groundbreaking visual effects.",
+                "birth": "1952-05-14",
+                "death": ""
+                },
+                "_id": "68639866fdce14bfc0748a5f",
+                "title": "Forrest Gump",
+                "description": "A slow-witted but kind-hearted man from Alabama witnesses and unwittingly influences
+                several historical events in the 20th century United States. Through it all, he never stops loving his
+                childhood sweetheart, Jenny.",
+                "imagePath":
+                "https://xl.movieposterdb.com/12_04/1994/109830/xl_109830_58524cd6.jpg?v=2025-06-14%2017:14:56",
+                "featured": true,
+                "Description": "A kind-hearted, slow-witted man from Alabama unintentionally influences many significant
+                events in 20th-century America while remaining devoted to his childhood love, Jenny."
+                },<br><br>
+                {
+                "genre": {
+                "name": "Drama",
+                "description": "Drama films delve into real-life situations and emotions, offering thoughtful
+                reflections on human experiences and moral dilemmas. They focus on strong characters and impactful
+                storytelling."
+                },
+                "director": {
+                "name": "Jonathan Demme",
+                "bio": "Jonathan Demme was an American director noted for his ability to merge powerful storytelling
+                with musical and visual creativity. His work spans various genres, often focusing on deeply human and
+                empathetic themes.",
+                "birth": "1944-02-22",
+                "death": "2017-04-26"
+                },
+                "_id": "68639866fdce14bfc0748a62",
+                "title": "Philadelphia",
+                "description": "A lawyer fired due to his HIV-positive status hires another lawyer for a wrongful
+                dismissal lawsuit, shedding light on prejudice and human dignity.",
+                "imagePath":
+                "https://xl.movieposterdb.com/08_06/1993/107818/xl_107818_ee7925d9.jpg?v=2025-02-02%2000:19:06",
+                "featured": true
+                }
+                ]
+            </td>
+        </tr>
+
+
+        <tr>
+            <td>Returns movies by director's name</td>
+            <td>/directors/:directorName/movies</td>
+            <td>GET</td>
+            <td>Director's name as URL param</td>
+            <td>None</td>
+            <td>An array of objects containing all the movies of the selected director. Example : <br><br>
+                [
+                {
+                "genre": {
+                "name": "Crime",
+                "description": "Crime films portray illegal acts, their investigation, or their impact on society and
+                individuals. They frequently depict moral ambiguity and explore justice, corruption, and redemption."
+                },
+                "director": {
+                "name": "Sam Mendes",
+                "bio": "Sam Mendes is a British director known for his work in both theater and film. He has received
+                acclaim for his visually rich and emotionally resonant storytelling across various genres, including war
+                and drama.",
+                "birth": "1965-08-01",
+                "death": ""
+                },
+                "_id": "68639866fdce14bfc0748a63",
+                "title": "Road to Perdition",
+                "description": "A mob enforcer's son witnesses a murder and the two are forced to flee as they're
+                pursued by those seeking revenge, leading to a complex story of loyalty and vengeance.",
+                "imagePath":
+                "https://xl.movieposterdb.com/08_05/2002/257044/xl_257044_ed6e2b94.jpg?v=2024-09-14%2020:51:45",
+                "featured": false
+                }
+                ]
+            </td>
         </tr>
 
         <tr>
             <td>Returns director information by name</td>
-            <td>/directors/:director.name</td>
+            <td>/directors/:directorName</td>
             <td>GET</td>
             <td>Director's name</td>
             <td>None</td>
-            <td>An object containing a director's data including bio, birth year, death year</td>
+            <td>An object containing a director's data including bio, birth year, death year. Example : <br><br>
+                {
+                "name": "Sam Mendes",
+                "bio": "Sam Mendes is a British director known for his work in both theater and film. He has received
+                acclaim for his visually rich and emotionally resonant storytelling across various genres, including war
+                and drama.",
+                "birth": "1965-08-01",
+                "death": ""
+                }
+            </td>
         </tr>
     </table>
 
@@ -120,43 +245,79 @@
                 "password": "PW123!"<br>
                 }
             </td>
-            <td>Confirmation message in plain text or created user object</td>
+            <td>A JSON object holding data about the user including a generated ID and FavoriteMovies array (as well as
+                the document's version): <br> <br>
+                {<br>
+                "userName": "john_doe",<br>
+                "email": "john@example.com",<br>
+                "password": "PW123!"<br>
+                "_id": "4596848964896qfd464d1"<br>
+                "__v": 0
+                }</td>
         </tr>
 
         <tr>
             <td>Update user information</td>
-            <td>/users/:UserName</td>
+            <td>/users/:userName</td>
             <td>PUT</td>
             <td>Current userName</td>
             <td>None</td>
-            <td>A text message indicating the updated user information</td>
+            <td>A text message indicating the updated user information. Example : <br><br>
+                {
+                "Username": "Jane Doe",<br>
+                "Password": "securePass456",<br>
+                "Email": "john@example.com",<br>
+                "Birthday": "1990-01-01",<br>
+                "FavoriteMovies": ["68639866fdce14bfc0748a5f"]
+                }
+            </td>
         </tr>
 
         <tr>
             <td>Add a movie to user’s favorites</td>
             <td>/users/:userName/favorites/:movieID</td>
             <td>POST</td>
-            <td>UserName, movieID</td>
+            <td>userName and movieID as URL param</td>
             <td>None</td>
-            <td>A text message indicating: "Movie added to your favorites"</td>
+            <td>A JSON object containing the user's info including the ID of the movie added to FavoriteMovies array.
+                Exemple : <br><br>
+                {
+                "_id": "68658c5982a55aa80fab737e",<br>
+                "Username": "John Doe",<br>
+                "Password": "securePass456",<br>
+                "Email": "john@example.com",<br>
+                "FavoriteMovies": <br>
+                ["68639866fdce14bfc0748a5f"],<br>
+                "__v": 0}
+            </td>
         </tr>
 
         <tr>
             <td>Remove a movie from user’s favorites</td>
             <td>/users/:userName/favorites/:movieID</td>
             <td>DELETE</td>
-            <td>UserName, movieID</td>
+            <td>userName and movieID as URL param</td>
             <td>None</td>
-            <td>A text message indicating: "Movie removed from your favorites"</td>
+            <td>A JSON object containing the user's info including a FavoriteMovies array displayed without the ID of
+                the movie that was just deleted. Example :
+                <br><br>
+                {
+                "_id": "68658c5982a55aa80fab737e",<br>
+                "Username": "John Doe",<br>
+                "Password": "securePass456",<br>
+                "Email": "john@example.com",<br>
+                "FavoriteMovies": [],<br>
+                "__v": 0}
+            </td>
         </tr>
 
         <tr>
             <td>Deregister an existing user</td>
-            <td>/users/:_id</td>
+            <td>/users/:userName</td>
             <td>DELETE</td>
-            <td>Username</td>
+            <td>userName as URL param</td>
             <td>None</td>
-            <td>A text message indicating: "You have been deregistered"</td>
+            <td>A text message indicating: "[Username] was deleted"</td>
         </tr>
     </table>
 </body>
