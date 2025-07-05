@@ -4,13 +4,15 @@ const Models = require('./models.js');
 const Movies = Models.Movie;
 const Users = Models.User;
 
-mongoose.connect('mongodb://localhost:27017/TomHanksAppDB', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost:27017/TomHanksAppDB', { useNewUrlParser: true, useUnifiedTopology: true }); //deprecated, should I remove everything in between {} ?
 
 const express = require('express'),
     app = express(),
     //logging middleware
     morgan = require('morgan'),
     uuid = require('uuid');
+
+const lodash = require('lodash');    
 
 //imports body-parser
 app.use(express.json());
@@ -263,9 +265,11 @@ app.post('/users', async (req, res) => {
                         Password: req.body.Password,
                         Email: req.body.Email,
                         Birthday: req.body.Birthday,
-                        /*FavoriteMovies: req.body.FavoriteMovies*/
                     })
-                    .then((user) => { res.status(201).json(user) })
+                    .then((user) => {
+                        const userResponse = lodash.pick(user.toObject(), ['Username', 'Email', 'Birthday']);
+                        res.status(201).json(userResponse)
+                    })
                     .catch((error) => {
                         console.error(error);
                         res.status(500).send('Error: ' + error);
@@ -346,12 +350,12 @@ app.put('/users/:userName', passport.authenticate('jwt', { session: false }), as
  *     "User JohnDoe was deleted."
  */
 app.delete('/users/:userName', passport.authenticate('jwt', { session: false }), async (req, res) => {
-    /*console.log('JWT payload:', req.user);
-    console.log('Request param:', req.params.userName);*/
+    console.log('JWT payload:', req.user);
+    console.log('Request param:', req.params.userName);
     if (req.user.Username !== req.params.userName) {
         return res.status(403).send('You can only delete your own account');
     }
-    await Users.findOneAndRemove({ Username: req.params.userName })
+    await Users.findOneAndDelete({ Username: req.params.userName })
         .then((user) => {
             if (!user) {
                 res.status(404).send(req.params.userName + ' was not found');
