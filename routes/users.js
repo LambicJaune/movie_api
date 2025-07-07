@@ -36,7 +36,7 @@ const { check, validationResult } = require('express-validator');
  *       "FavoriteMovies": ["68639866fdce14bfc0748a5f", "68639866fdce14bfc0748a60"]
  *     }
  */
-router.post('/', async (req, res) => {
+router.post('/',
     // Validation logic here for request
     //you can either use a chain of methods like .not().isEmpty()
     //which means "opposite of isEmpty" in plain english "is not empty"
@@ -50,7 +50,7 @@ router.post('/', async (req, res) => {
     ], async (req, res) => {
 
         // check the validation object for errors
-        let errors = validationResult(req);
+        const errors = validationResult(req);
 
         if (!errors.isEmpty()) {
             return res.status(422).json({ errors: errors.array() });
@@ -82,7 +82,7 @@ router.post('/', async (req, res) => {
             .catch((error) => {
                 console.error(error);
                 res.status(500).send('Error: ' + error);
-            });
+            })
     });
 
 /**
@@ -114,7 +114,7 @@ router.post('/', async (req, res) => {
  *       "FavoriteMovies": ["68639866fdce14bfc0748a5f"]
  *     }
  */
-router.put('/:userName', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.put('/:userName', passport.authenticate('jwt', { session: false }),
     // Validation logic here for request
     //you can either use a chain of methods like .not().isEmpty()
     //which means "opposite of isEmpty" in plain english "is not empty"
@@ -128,7 +128,7 @@ router.put('/:userName', passport.authenticate('jwt', { session: false }), async
     ], async (req, res) => {
 
         // check the validation object for errors
-        let errors = validationResult(req);
+        const errors = validationResult(req);
 
         if (!errors.isEmpty()) {
             return res.status(422).json({ errors: errors.array() });
@@ -142,7 +142,7 @@ router.put('/:userName', passport.authenticate('jwt', { session: false }), async
             $set:
             {
                 Username: req.body.Username,
-                Password: req.body.Password,
+                Password: Users.hashPassword(req.body.Password),
                 Email: req.body.Email,
                 Birthday: req.body.Birthday,
                 FavoriteMovies: req.body.FavoriteMovies
@@ -155,8 +155,7 @@ router.put('/:userName', passport.authenticate('jwt', { session: false }), async
             .catch((err) => {
                 console.error(err);
                 res.status(500).send('Error: ' + err);
-            })
-
+            });
     });
 
 
