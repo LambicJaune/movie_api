@@ -3,6 +3,7 @@ const router = express.Router();
 const Models = require('../models/models.js');
 const Movies = Models.Movie;
 const passport = require('passport');
+const { check, validationResult } = require('express-validator');
 
 /**
  * Get all movies
