@@ -4,7 +4,7 @@ const Models = require('./models.js');
 const Movies = Models.Movie;
 const Users = Models.User;
 
-mongoose.connect('mongodb://localhost:27017/TomHanksAppDB', { useNewUrlParser: true, useUnifiedTopology: true }); //deprecated, should I remove everything in between {} ?
+mongoose.connect('mongodb://localhost:27017/TomHanksAppDB');
 
 const express = require('express'),
     app = express(),
