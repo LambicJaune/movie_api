@@ -72,18 +72,18 @@ router.get('/', passport.authenticate('jwt', { session: false }), async (req, re
  *     ]
  */
 router.get('/genres/:genreName', passport.authenticate('jwt', { session: false }), async (req, res) => {
-   try {
-    const movies = await Movies.find({ 'genre.name': req.params.genreName });
+    try {
+        const movies = await Movies.find({ 'genre.name': req.params.genreName });
 
-    if (!movies || movies.length === 0) {
-      return res.status(404).send('No movies found for the given genre');
+        if (!movies || movies.length === 0) {
+            return res.status(404).send('No movies found for the given genre');
+        }
+
+        res.status(200).json(movies);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
     }
-
-    res.status(200).json(movies);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error: ' + err);
-  }
 });
 
 /**
