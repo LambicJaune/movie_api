@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
 const Models = require('./models/models.js');
 
+//connects the DB to the API on Heroku, written so it prevents leaving my password open in my code
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('MongoDB connection error:', err));
 
-/*mongodb+srv://thehopman:Fb!ZP72!fPqt#bY@mytomhanksapp.tjcica8.mongodb.net/TomHanksAppDB?retryWrites=true&w=majority&appName=TomHanksApp*/
+/*mongoose.connect('mongodb://localhost:27017/dbname');*/ // use the local databas instead of online (if using, comment out the above code)
 
 const express = require('express'),
     app = express(),
