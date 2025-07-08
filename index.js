@@ -1,7 +1,11 @@
 const mongoose = require('mongoose');
 const Models = require('./models/models.js');
 
-mongoose.connect('mongodb://localhost:27017/TomHanksAppDB');
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log('Connected to MongoDB'))
+    .catch(err => console.error('MongoDB connection error:', err));
+
+/*mongodb+srv://thehopman:Fb!ZP72!fPqt#bY@mytomhanksapp.tjcica8.mongodb.net/TomHanksAppDB?retryWrites=true&w=majority&appName=TomHanksApp*/
 
 const express = require('express'),
     app = express(),
