@@ -46,6 +46,7 @@ router.post('/',
         check('Username', 'Username is required').isLength({ min: 5 }),
         check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
         check('Password', 'Password is required').not().isEmpty(),
+        check('Password', 'Password cannot contain spaces').matches(/^\S+$/),
         check('Email', 'Email does not appear to be valid').isEmail()
     ], async (req, res) => {
 
