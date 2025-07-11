@@ -1,325 +1,862 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOM HANKS MOVIES API Documentation</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding-top: 20px;
-        }
-
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-bottom: 40px;
-        }
-
-        th,
-        td {
-            border: 1px solid #aaa;
-            padding: 12px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #e8e8e8;
-        }
-
-        h1 {
-            margin-top: 0;
-        }
-
-        h2 {
-            margin: 40px 0 30px;
-        }
+<!doctype html>
+<html>
+  <head>
+    <title>Tom Hanks Movies API</title>
+    <style type="text/css">
+      body {
+      	font-family: Trebuchet MS, sans-serif;
+      	font-size: 15px;
+      	color: #444;
+      	margin-right: 24px;
+      }
+      
+      h1	{
+      	font-size: 25px;
+      }
+      h2	{
+      	font-size: 20px;
+      }
+      h3	{
+      	font-size: 16px;
+      	font-weight: bold;
+      }
+      hr	{
+      	height: 1px;
+      	border: 0;
+      	color: #ddd;
+      	background-color: #ddd;
+      }
+      
+      .app-desc {
+        clear: both;
+        margin-left: 20px;
+      }
+      .param-name {
+        width: 100%;
+      }
+      .license-info {
+        margin-left: 20px;
+      }
+      
+      .license-url {
+        margin-left: 20px;
+      }
+      
+      .model {
+        margin: 0 0 0px 20px;
+      }
+      
+      .method {
+        margin-left: 20px;
+      }
+      
+      .method-notes	{
+      	margin: 10px 0 20px 0;
+      	font-size: 90%;
+      	color: #555;
+      }
+      
+      pre {
+        padding: 10px;
+        margin-bottom: 2px;
+      }
+      
+      .http-method {
+       text-transform: uppercase;
+      }
+      
+      pre.get {
+        background-color: #0f6ab4;
+      }
+      
+      pre.post {
+        background-color: #10a54a;
+      }
+      
+      pre.put {
+        background-color: #c5862b;
+      }
+      
+      pre.delete {
+        background-color: #a41e22;
+      }
+      
+      .huge	{
+      	color: #fff;
+      }
+      
+      pre.example {
+        background-color: #f3f3f3;
+        padding: 10px;
+        border: 1px solid #ddd;
+      }
+      
+      code {
+        white-space: pre;
+      }
+      
+      .nickname {
+        font-weight: bold;
+      }
+      
+      .method-path {
+        font-size: 1.5em;
+        background-color: #0f6ab4;
+      }
+      
+      .up {
+        float:right;
+      }
+      
+      .parameter {
+        width: 500px;
+      }
+      
+      .param {
+        width: 500px;
+        padding: 10px 0 0 20px;
+        font-weight: bold;
+      }
+      
+      .param-desc {
+        width: 700px;
+        padding: 0 0 0 20px;
+        color: #777;
+      }
+      
+      .param-type {
+        font-style: italic;
+      }
+      
+      .param-enum-header {
+      width: 700px;
+      padding: 0 0 0 60px;
+      color: #777;
+      font-weight: bold;
+      }
+      
+      .param-enum {
+      width: 700px;
+      padding: 0 0 0 80px;
+      color: #777;
+      font-style: italic;
+      }
+      
+      .field-label {
+        padding: 0;
+        margin: 0;
+        clear: both;
+      }
+      
+      .field-items	{
+      	padding: 0 0 15px 0;
+      	margin-bottom: 15px;
+      }
+      
+      .return-type {
+        clear: both;
+        padding-bottom: 10px;
+      }
+      
+      .param-header {
+        font-weight: bold;
+      }
+      
+      .method-tags {
+        text-align: right;
+      }
+      
+      .method-tag {
+        background: none repeat scroll 0% 0% #24A600;
+        border-radius: 3px;
+        padding: 2px 10px;
+        margin: 2px;
+        color: #FFF;
+        display: inline-block;
+        text-decoration: none;
+      }
     </style>
-</head>
+  </head>
+  <body>
+  <h1>Tom Hanks Movies API</h1>
+    <div class="app-desc">An API that returns data about movies featuring Tom Hanks: complete list of movies involving the actor, movie description, genre, director (bio, birth year, death year), image URL, and featured status. Users can register, deregister, update information, and manage their list of favorite movies.</div>
+    <div class="app-desc">More information: <a href="https://helloreverb.com">https://helloreverb.com</a></div>
+    <div class="app-desc">Contact Info: <a href="hello@helloreverb.com">hello@helloreverb.com</a></div>
+    <div class="app-desc">Version: 1.0.0</div>
+    
+    <div class="license-info">All rights reserved</div>
+    <div class="license-url">http://apache.org/licenses/LICENSE-2.0.html</div>
+  <h2>Access</h2>
 
-<body>
+  <h2><a name="__Methods">Methods</a></h2>
+  [ Jump to <a href="#__Models">Models</a> ]
 
-    <h1>The Tom Hanks Movies API</h1>
-    <p>An API that returns data about movies featuring Tom Hanks : complete list of movies involving the actor,
-        movie description, genre (retrieved by name, e.g., "Comedy"), director (including data, e.g. bio, birth year,
-        death year), image URL, whether the movie if featured or not. Users can register as well as deregister,
-        update their user information, and add or remove movies from their list of favorites</p>
+  <h3>Table of Contents </h3>
+  <div class="method-summary"></div>
+  <h4><a href="#Default">Default</a></h4>
+  <ul>
+  <li><a href="#moviesDirectorsDirectorNameGet"><code><span class="http-method">get</span> /movies/directors/{directorName}</code></a></li>
+  <li><a href="#moviesDirectorsDirectorNameMoviesGet"><code><span class="http-method">get</span> /movies/directors/{directorName}/movies</code></a></li>
+  <li><a href="#moviesGenresGenreNameGet"><code><span class="http-method">get</span> /movies/genres/{genreName}</code></a></li>
+  <li><a href="#moviesGet"><code><span class="http-method">get</span> /movies</code></a></li>
+  <li><a href="#moviesTitleGet"><code><span class="http-method">get</span> /movies/{title}</code></a></li>
+  <li><a href="#usersPost"><code><span class="http-method">post</span> /users</code></a></li>
+  <li><a href="#usersUserNameDelete"><code><span class="http-method">delete</span> /users/{userName}</code></a></li>
+  <li><a href="#usersUserNameFavoritesMovieIDDelete"><code><span class="http-method">delete</span> /users/{userName}/favorites/{movieID}</code></a></li>
+  <li><a href="#usersUserNameFavoritesMovieIDPost"><code><span class="http-method">post</span> /users/{userName}/favorites/{movieID}</code></a></li>
+  <li><a href="#usersUserNamePut"><code><span class="http-method">put</span> /users/{userName}</code></a></li>
+  </ul>
 
-    <h2> Movies Endpoints</h2>
+  <h1><a name="Default">Default</a></h1>
+  <div class="method"><a name="moviesDirectorsDirectorNameGet"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /movies/directors/{directorName}</code></pre></div>
+    <div class="method-summary">Returns director information by name (<span class="nickname">moviesDirectorsDirectorNameGet</span>)</div>
+    <div class="method-notes"></div>
 
-    <table>
-        <tr>
-            <th>Request</th>
-            <th>URL Endpoint</th>
-            <th>HTTP Method</th>
-            <th>Query Parameters</th>
-            <th>Request body data format</th>
-            <th>Response body data format</th>
-        </tr>
-
-        <tr>
-            <td>Returns a list of all movies</td>
-            <td>/movies</td>
-            <td>GET</td>
-            <td>None</td>
-            <td>None</td>
-            <td>An array of objects (movies). Example : <br><br>
-                { "title": "Forrest Gump", "genre": { "name": "Drama", "description": "..." }, "director": { "name":
-                "Robert Zemeckis", "bio": "...", "birth": "1952-05-14", "death": "" }, "description": "A slow-witted
-                man...", "imagePath": "url", "featured": true }</td>
-        </tr>
-
-        <tr>
-            <td>Returns movie details by title</td>
-            <td>/movies/:title</td>
-            <td>GET</td>
-            <td>Movie title as URL param</td>
-            <td>None</td>
-            <td>A movie object displaying title, genre, director, description, imageURL, if featured of not. Example :
-                <br><br>
-
-                {
-                "genre": {
-                "name": "Biography",
-                "description": "Biographical films depict the life and achievements of real people, highlighting
-                personal struggles, societal contributions, and pivotal historical moments."
-                },
-                "director": {
-                "name": "Clint Eastwood",
-                "bio": "Clint Eastwood is a renowned actor and director known for his contributions to American cinema,
-                particularly in westerns and drama. His directing is marked by efficient storytelling and moral
-                complexity.",
-                "birth": "1930-05-31",
-                "death": ""
-                },
-                "_id": "68639866fdce14bfc0748a68",
-                "title": "Sully",
-                "description": "After a forced water landing on the Hudson River, Captain Chesley 'Sully' Sullenberger
-                faces public scrutiny and investigation while defending his life-saving actions.",
-                "imagePath":
-                "https://xl.movieposterdb.com/22_04/2016/3263904/xl_3263904_430534c9.jpg?v=2025-02-02%2012:06:07",
-                "featured": false
-                }
-            </td>
-        </tr>
-
-        <tr>
-            <td>Returns movies by genre name</td>
-            <td>/movies/genres/:genreName</td>
-            <td>GET</td>
-            <td>Genre name as URL param</td>
-            <td>None</td>
-            <td>An array of objects containing all the movies of the selected genre. Example : <br><br>
-                [
-                {
-                "genre": {
-                "name": "Drama",
-                "description": "Drama films focus on realistic storytelling, often portraying intense character
-                development, emotional themes, and personal conflict. They explore social, psychological, or moral
-                struggles in depth."
-                },
-                "director": {
-                "name": "Robert Zemeckis",
-                "bio": "Robert Zemeckis is an acclaimed American filmmaker known for blending technical innovation with
-                strong storytelling. He has directed numerous successful films across genres, often incorporating
-                groundbreaking visual effects.",
-                "birth": "1952-05-14",
-                "death": ""
-                },
-                "_id": "68639866fdce14bfc0748a5f",
-                "title": "Forrest Gump",
-                "description": "A slow-witted but kind-hearted man from Alabama witnesses and unwittingly influences
-                several historical events in the 20th century United States. Through it all, he never stops loving his
-                childhood sweetheart, Jenny.",
-                "imagePath":
-                "https://xl.movieposterdb.com/12_04/1994/109830/xl_109830_58524cd6.jpg?v=2025-06-14%2017:14:56",
-                "featured": true,
-                "Description": "A kind-hearted, slow-witted man from Alabama unintentionally influences many significant
-                events in 20th-century America while remaining devoted to his childhood love, Jenny."
-                },<br><br>
-                {
-                "genre": {
-                "name": "Drama",
-                "description": "Drama films delve into real-life situations and emotions, offering thoughtful
-                reflections on human experiences and moral dilemmas. They focus on strong characters and impactful
-                storytelling."
-                },
-                "director": {
-                "name": "Jonathan Demme",
-                "bio": "Jonathan Demme was an American director noted for his ability to merge powerful storytelling
-                with musical and visual creativity. His work spans various genres, often focusing on deeply human and
-                empathetic themes.",
-                "birth": "1944-02-22",
-                "death": "2017-04-26"
-                },
-                "_id": "68639866fdce14bfc0748a62",
-                "title": "Philadelphia",
-                "description": "A lawyer fired due to his HIV-positive status hires another lawyer for a wrongful
-                dismissal lawsuit, shedding light on prejudice and human dignity.",
-                "imagePath":
-                "https://xl.movieposterdb.com/08_06/1993/107818/xl_107818_ee7925d9.jpg?v=2025-02-02%2000:19:06",
-                "featured": true
-                }
-                ]
-            </td>
-        </tr>
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">directorName (required)</div>
+      
+            <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  </div>    </div>  <!-- field-items -->
 
 
-        <tr>
-            <td>Returns movies by director's name</td>
-            <td>movies/directors/:directorName/movies</td>
-            <td>GET</td>
-            <td>Director's name as URL param</td>
-            <td>None</td>
-            <td>An array of objects containing all the movies of the selected director. Example : <br><br>
-                [
-                {
-                "genre": {
-                "name": "Crime",
-                "description": "Crime films portray illegal acts, their investigation, or their impact on society and
-                individuals. They frequently depict moral ambiguity and explore justice, corruption, and redemption."
-                },
-                "director": {
-                "name": "Sam Mendes",
-                "bio": "Sam Mendes is a British director known for his work in both theater and film. He has received
-                acclaim for his visually rich and emotionally resonant storytelling across various genres, including war
-                and drama.",
-                "birth": "1965-08-01",
-                "death": ""
-                },
-                "_id": "68639866fdce14bfc0748a63",
-                "title": "Road to Perdition",
-                "description": "A mob enforcer's son witnesses a murder and the two are forced to flee as they're
-                pursued by those seeking revenge, leading to a complex story of loyalty and vengeance.",
-                "imagePath":
-                "https://xl.movieposterdb.com/08_05/2002/257044/xl_257044_ed6e2b94.jpg?v=2024-09-14%2020:51:45",
-                "featured": false
-                }
-                ]
-            </td>
-        </tr>
 
-        <tr>
-            <td>Returns director information by name</td>
-            <td>movies/directors/:directorName</td>
-            <td>GET</td>
-            <td>Director's name</td>
-            <td>None</td>
-            <td>An object containing a director's data including bio, birth year, death year. Example : <br><br>
-                {
-                "name": "Sam Mendes",
-                "bio": "Sam Mendes is a British director known for his work in both theater and film. He has received
-                acclaim for his visually rich and emotionally resonant storytelling across various genres, including war
-                and drama.",
-                "birth": "1965-08-01",
-                "death": ""
-                }
-            </td>
-        </tr>
-    </table>
 
-    <h2> Users Endpoints</h2>
 
-    <table>
-        <tr>
-            <th>Request</th>
-            <th>URL Endpoint</th>
-            <th>HTTP Method</th>
-            <th>Query Parameters</th>
-            <th>Request body data format</th>
-            <th>Response body data format</th>
-        </tr>
 
-        <tr>
-            <td>Register a new user</td>
-            <td>/users</td>
-            <td>POST</td>
-            <td>None</td>
-            <td>
-                A JSON object holding data about the user: <br> <br>
-                {<br>
-                "userName": "john_doe",<br>
-                "email": "john@example.com",<br>
-                "password": "PW123!"<br>
-                }
-            </td>
-            <td>A JSON object holding data about the user including a generated ID and FavoriteMovies array (as well as
-                the document's version): <br> <br>
-                {<br>
-                "userName": "john_doe",<br>
-                "email": "john@example.com",<br>
-                "password": "PW123!"<br>
-                "_id": "4596848964896qfd464d1"<br>
-                "__v": 0
-                }</td>
-        </tr>
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Director">Director</a>
+      
+    </div>
 
-        <tr>
-            <td>Update user information</td>
-            <td>/users/:userName</td>
-            <td>PUT</td>
-            <td>Current userName</td>
-            <td>None</td>
-            <td>A text message indicating the updated user information. Example : <br><br>
-                {
-                "Username": "Jane Doe",<br>
-                "Password": "securePass456",<br>
-                "Email": "john@example.com",<br>
-                "Birthday": "1990-01-01",<br>
-                "FavoriteMovies": ["68639866fdce14bfc0748a5f"]
-                }
-            </td>
-        </tr>
+    <!--Todo: process Response Object and its headers, schema, examples -->
 
-        <tr>
-            <td>Add a movie to user’s favorites</td>
-            <td>/users/:userName/favorites/:movieID</td>
-            <td>POST</td>
-            <td>userName and movieID as URL param</td>
-            <td>None</td>
-            <td>A JSON object containing the user's info including the ID of the movie added to FavoriteMovies array.
-                Exemple : <br><br>
-                {
-                "_id": "68658c5982a55aa80fab737e",<br>
-                "Username": "John Doe",<br>
-                "Password": "securePass456",<br>
-                "Email": "john@example.com",<br>
-                "FavoriteMovies": <br>
-                ["68639866fdce14bfc0748a5f"],<br>
-                "__v": 0}
-            </td>
-        </tr>
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "death" : "2000-01-23",
+  "name" : "name",
+  "bio" : "bio",
+  "birth" : "2000-01-23"
+}</code></pre>
 
-        <tr>
-            <td>Remove a movie from user’s favorites</td>
-            <td>/users/:userName/favorites/:movieID</td>
-            <td>DELETE</td>
-            <td>userName and movieID as URL param</td>
-            <td>None</td>
-            <td>A JSON object containing the user's info including a FavoriteMovies array displayed without the ID of
-                the movie that was just deleted. Example :
-                <br><br>
-                {
-                "_id": "68658c5982a55aa80fab737e",<br>
-                "Username": "John Doe",<br>
-                "Password": "securePass456",<br>
-                "Email": "john@example.com",<br>
-                "FavoriteMovies": [],<br>
-                "__v": 0}
-            </td>
-        </tr>
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
 
-        <tr>
-            <td>Deregister an existing user</td>
-            <td>/users/:userName</td>
-            <td>DELETE</td>
-            <td>userName as URL param</td>
-            <td>None</td>
-            <td>A text message indicating: "[Username] was deleted"</td>
-        </tr>
-    </table>
-</body>
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    Director information
+        <a href="#Director">Director</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="moviesDirectorsDirectorNameMoviesGet"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /movies/directors/{directorName}/movies</code></pre></div>
+    <div class="method-summary">Returns movies by director's name (<span class="nickname">moviesDirectorsDirectorNameMoviesGet</span>)</div>
+    <div class="method-notes"></div>
 
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">directorName (required)</div>
+      
+            <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  </div>    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      array[<a href="#Movie">Movie</a>]
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>[ {
+  "featured" : true,
+  "director" : {
+    "death" : "2000-01-23",
+    "name" : "name",
+    "bio" : "bio",
+    "birth" : "2000-01-23"
+  },
+  "imagePath" : "imagePath",
+  "genre" : {
+    "name" : "name",
+    "description" : "description"
+  },
+  "description" : "description",
+  "_id" : "_id",
+  "title" : "title"
+}, {
+  "featured" : true,
+  "director" : {
+    "death" : "2000-01-23",
+    "name" : "name",
+    "bio" : "bio",
+    "birth" : "2000-01-23"
+  },
+  "imagePath" : "imagePath",
+  "genre" : {
+    "name" : "name",
+    "description" : "description"
+  },
+  "description" : "description",
+  "_id" : "_id",
+  "title" : "title"
+} ]</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    A list of movies by the specified director
+        
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="moviesGenresGenreNameGet"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /movies/genres/{genreName}</code></pre></div>
+    <div class="method-summary">Returns movies by genre name (<span class="nickname">moviesGenresGenreNameGet</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">genreName (required)</div>
+      
+            <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  </div>    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      array[<a href="#Movie">Movie</a>]
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>[ {
+  "featured" : true,
+  "director" : {
+    "death" : "2000-01-23",
+    "name" : "name",
+    "bio" : "bio",
+    "birth" : "2000-01-23"
+  },
+  "imagePath" : "imagePath",
+  "genre" : {
+    "name" : "name",
+    "description" : "description"
+  },
+  "description" : "description",
+  "_id" : "_id",
+  "title" : "title"
+}, {
+  "featured" : true,
+  "director" : {
+    "death" : "2000-01-23",
+    "name" : "name",
+    "bio" : "bio",
+    "birth" : "2000-01-23"
+  },
+  "imagePath" : "imagePath",
+  "genre" : {
+    "name" : "name",
+    "description" : "description"
+  },
+  "description" : "description",
+  "_id" : "_id",
+  "title" : "title"
+} ]</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    A list of movies filtered by genre
+        
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="moviesGet"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /movies</code></pre></div>
+    <div class="method-summary">Returns a list of all movies (<span class="nickname">moviesGet</span>)</div>
+    <div class="method-notes"></div>
+
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      array[<a href="#Movie">Movie</a>]
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>[ {
+  "featured" : true,
+  "director" : {
+    "death" : "2000-01-23",
+    "name" : "name",
+    "bio" : "bio",
+    "birth" : "2000-01-23"
+  },
+  "imagePath" : "imagePath",
+  "genre" : {
+    "name" : "name",
+    "description" : "description"
+  },
+  "description" : "description",
+  "_id" : "_id",
+  "title" : "title"
+}, {
+  "featured" : true,
+  "director" : {
+    "death" : "2000-01-23",
+    "name" : "name",
+    "bio" : "bio",
+    "birth" : "2000-01-23"
+  },
+  "imagePath" : "imagePath",
+  "genre" : {
+    "name" : "name",
+    "description" : "description"
+  },
+  "description" : "description",
+  "_id" : "_id",
+  "title" : "title"
+} ]</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    A list of all movies
+        
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="moviesTitleGet"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /movies/{title}</code></pre></div>
+    <div class="method-summary">Returns movie details by title (<span class="nickname">moviesTitleGet</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">title (required)</div>
+      
+            <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  </div>    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Movie">Movie</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "featured" : true,
+  "director" : {
+    "death" : "2000-01-23",
+    "name" : "name",
+    "bio" : "bio",
+    "birth" : "2000-01-23"
+  },
+  "imagePath" : "imagePath",
+  "genre" : {
+    "name" : "name",
+    "description" : "description"
+  },
+  "description" : "description",
+  "_id" : "_id",
+  "title" : "title"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    A single movie object
+        <a href="#Movie">Movie</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="usersPost"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /users</code></pre></div>
+    <div class="method-summary">Register a new user (<span class="nickname">usersPost</span>)</div>
+    <div class="method-notes"></div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">body <a href="#UserRegistration">UserRegistration</a> (required)</div>
+      
+            <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+                </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#User">User</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "Email" : "",
+  "Username" : "Username",
+  "__v" : 0,
+  "Birthday" : "2000-01-23",
+  "_id" : "_id",
+  "FavoriteMovies" : [ "FavoriteMovies", "FavoriteMovies" ],
+  "Password" : "Password"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">201</h4>
+    The newly created user object
+        <a href="#User">User</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="usersUserNameDelete"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /users/{userName}</code></pre></div>
+    <div class="method-summary">Deregister an existing user (<span class="nickname">usersUserNameDelete</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">userName (required)</div>
+      
+            <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  </div>    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      
+      String
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>"[Username] was deleted"</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>text/plain</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    A confirmation message
+        <a href="#String">String</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="usersUserNameFavoritesMovieIDDelete"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /users/{userName}/favorites/{movieID}</code></pre></div>
+    <div class="method-summary">Remove a movie from user’s favorites (<span class="nickname">usersUserNameFavoritesMovieIDDelete</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">userName (required)</div>
+      
+            <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  </div>      <div class="param">movieID (required)</div>
+      
+            <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  </div>    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#User">User</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "Email" : "",
+  "Username" : "Username",
+  "__v" : 0,
+  "Birthday" : "2000-01-23",
+  "_id" : "_id",
+  "FavoriteMovies" : [ "FavoriteMovies", "FavoriteMovies" ],
+  "Password" : "Password"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    User data with the movie removed from favorites
+        <a href="#User">User</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="usersUserNameFavoritesMovieIDPost"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /users/{userName}/favorites/{movieID}</code></pre></div>
+    <div class="method-summary">Add a movie to user’s favorites (<span class="nickname">usersUserNameFavoritesMovieIDPost</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">userName (required)</div>
+      
+            <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  </div>      <div class="param">movieID (required)</div>
+      
+            <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  </div>    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#User">User</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "Email" : "",
+  "Username" : "Username",
+  "__v" : 0,
+  "Birthday" : "2000-01-23",
+  "_id" : "_id",
+  "FavoriteMovies" : [ "FavoriteMovies", "FavoriteMovies" ],
+  "Password" : "Password"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    User data with updated favorites
+        <a href="#User">User</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="usersUserNamePut"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="put"><code class="huge"><span class="http-method">put</span> /users/{userName}</code></pre></div>
+    <div class="method-summary">Update user information (<span class="nickname">usersUserNamePut</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">userName (required)</div>
+      
+            <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  </div>    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#User">User</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "Email" : "",
+  "Username" : "Username",
+  "__v" : 0,
+  "Birthday" : "2000-01-23",
+  "_id" : "_id",
+  "FavoriteMovies" : [ "FavoriteMovies", "FavoriteMovies" ],
+  "Password" : "Password"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    Updated user information
+        <a href="#User">User</a>
+  </div> <!-- method -->
+  <hr/>
+
+  <h2><a name="__Models">Models</a></h2>
+  [ Jump to <a href="#__Methods">Methods</a> ]
+
+  <h3>Table of Contents</h3>
+  <ol>
+    <li><a href="#Director"><code>Director</code></a></li>
+    <li><a href="#Genre"><code>Genre</code></a></li>
+    <li><a href="#Movie"><code>Movie</code></a></li>
+    <li><a href="#User"><code>User</code></a></li>
+    <li><a href="#UserRegistration"><code>UserRegistration</code></a></li>
+  </ol>
+
+  <div class="model">
+    <h3><a name="Director"><code>Director</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">name (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">bio (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">birth (optional)</div><div class="param-desc"><span class="param-type"><a href="#date">date</a></span>  format: date</div>
+<div class="param">death (optional)</div><div class="param-desc"><span class="param-type"><a href="#date">date</a></span>  format: date</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="Genre"><code>Genre</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">name (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">description (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="Movie"><code>Movie</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">_id (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">title (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">description (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">genre (optional)</div><div class="param-desc"><span class="param-type"><a href="#Genre">Genre</a></span>  </div>
+<div class="param">director (optional)</div><div class="param-desc"><span class="param-type"><a href="#Director">Director</a></span>  </div>
+<div class="param">imagePath (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">featured (optional)</div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="User"><code>User</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">_id (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">Username (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">Email (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  format: email</div>
+<div class="param">Password (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">Birthday (optional)</div><div class="param-desc"><span class="param-type"><a href="#date">date</a></span>  format: date</div>
+<div class="param">FavoriteMovies (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
+<div class="param">__v (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="UserRegistration"><code>UserRegistration</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">Username </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">email </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  format: email</div>
+<div class="param">password </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  </body>
 </html>
