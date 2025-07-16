@@ -11,7 +11,7 @@ const passport = require('passport');
  * @returns {Array.<object>} 200 - An array of movies
  * @returns {Error} 500 - Internal server error
  */
-router.get('/', /*passport.authenticate('jwt', { session: false }),*/ async (req, res) => {
+router.get('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
     await Movies.find()
         .then((movies) => {
             res.status(200).json(movies);
@@ -71,7 +71,7 @@ router.get('/', /*passport.authenticate('jwt', { session: false }),*/ async (req
  *       }
  *     ]
  */
-router.get('/genres/:genreName', /*passport.authenticate('jwt', { session: false }),*/ async (req, res) => {
+router.get('/genres/:genreName', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
         const movies = await Movies.find({ 'genre.name': req.params.genreName });
 
@@ -116,7 +116,7 @@ router.get('/genres/:genreName', /*passport.authenticate('jwt', { session: false
  *       }
  *     ]
  */
-router.get('/directors/:directorName/movies', /*passport.authenticate('jwt', { session: false }),*/ async (req, res) => {
+router.get('/directors/:directorName/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
     await Movies.find({ 'director.name': req.params.directorName })
         .then((movie) => {
             res.status(200).json(movie);
@@ -146,7 +146,7 @@ router.get('/directors/:directorName/movies', /*passport.authenticate('jwt', { s
  *       "death": null
  *     }
  */
-router.get('/directors/:directorName', /*passport.authenticate('jwt', { session: false }),*/ async (req, res) => {
+router.get('/directors/:directorName', passport.authenticate('jwt', { session: false }), async (req, res) => {
     await Movies.findOne({ 'director.name': req.params.directorName })
         .then((movie) => {
             if (!movie) {
@@ -191,7 +191,7 @@ router.get('/directors/:directorName', /*passport.authenticate('jwt', { session:
  *       "featured": true
  *     }
  */
-router.get('/:title', /*passport.authenticate('jwt', { session: false }),*/ async (req, res) => {
+router.get('/:title', passport.authenticate('jwt', { session: false }), async (req, res) => {
     await Movies.findOne({ title: req.params.title })
         .then((movie) => {
             res.status(200).json(movie);
