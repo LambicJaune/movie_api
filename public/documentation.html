@@ -475,36 +475,28 @@
     A list of all movies
         
   </div> <!-- method -->
-  <hr/>
-  <div class="method"><a name="moviesTitleGet"></a>
-    <div class="method-path">
+  <hr/><div class="method"><a name="moviesIdGet"></a>
+  <div class="method-path">
     <a class="up" href="#__Methods">Up</a>
-    <pre class="get"><code class="huge"><span class="http-method">get</span> /movies/{title}</code></pre></div>
-    <div class="method-summary">Returns movie details by title (<span class="nickname">moviesTitleGet</span>)</div>
-    <div class="method-notes"></div>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /movies/{movieID}</code></pre>
+  </div>
+  <div class="method-summary">Returns movie details by ID (<span class="nickname">moviesIdGet</span>)</div>
+  <div class="method-notes"></div>
 
-    <h3 class="field-label">Path parameters</h3>
-    <div class="field-items">
-      <div class="param">title (required)</div>
-      
-            <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  </div>    </div>  <!-- field-items -->
+  <h3 class="field-label">Path parameters</h3>
+  <div class="field-items">
+    <div class="param">movieID <span class="required">(required)</span></div>
+    <div class="param-desc"><span class="param-type">Path Parameter</span> — The ID of the movie (MongoDB ObjectId)</div>
+  </div> <!-- field-items -->
 
+  <h3 class="field-label">Return type</h3>
+  <div class="return-type">
+    <a href="#Movie">Movie</a>
+  </div>
 
-
-
-
-
-    <h3 class="field-label">Return type</h3>
-    <div class="return-type">
-      <a href="#Movie">Movie</a>
-      
-    </div>
-
-    <!--Todo: process Response Object and its headers, schema, examples -->
-
-    <h3 class="field-label">Example data</h3>
-    <div class="example-data-content-type">Content-Type: application/json</div>
-    <pre class="example"><code>{
+  <h3 class="field-label">Example data</h3>
+  <div class="example-data-content-type">Content-Type: application/json</div>
+  <pre class="example"><code>{
   "featured" : true,
   "director" : {
     "death" : "2000-01-23",
@@ -522,18 +514,19 @@
   "title" : "title"
 }</code></pre>
 
-    <h3 class="field-label">Produces</h3>
-    This API call produces the following media types according to the <span class="header">Accept</span> request header;
-    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
-    <ul>
-      <li><code>application/json</code></li>
-    </ul>
+  <h3 class="field-label">Produces</h3>
+  This API call produces the following media types according to the <span class="header">Accept</span> request header;
+  the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+  <ul>
+    <li><code>application/json</code></li>
+  </ul>
 
-    <h3 class="field-label">Responses</h3>
-    <h4 class="field-label">200</h4>
-    A single movie object
-        <a href="#Movie">Movie</a>
-  </div> <!-- method -->
+  <h3 class="field-label">Responses</h3>
+  <h4 class="field-label">200</h4>
+  A single movie object
+  <a href="#Movie">Movie</a>
+</div> <!-- method -->
+
   <hr/>
   <div class="method"><a name="usersPost"></a>
     <div class="method-path">
