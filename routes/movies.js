@@ -164,7 +164,7 @@ router.get('/directors/:directorName', passport.authenticate('jwt', { session: f
 
 /**
  * Get movie by title
- * @route GET /movies/:id
+ * @route GET /movies/:title
  * @group Movies - Operations about movies
  * @param {string} title.path.required - Title of the movie to retrieve
  * @returns {object} 200 - JSON object of the matching movie
@@ -191,8 +191,8 @@ router.get('/directors/:directorName', passport.authenticate('jwt', { session: f
  *       "featured": true
  *     }
  */
-router.get('/:id', /*passport.authenticate('jwt', { session: false }),*/ async (req, res) => {
-    await Movies.findById(req.params.id)
+router.get('/{movieID}', passport.authenticate('jwt', { session: false }), async (req, res) => {
+    await Movies.findOne({ title: req.params.title })
         .then((movie) => {
             res.status(200).json(movie);
         })
