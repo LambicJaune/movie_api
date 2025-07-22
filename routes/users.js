@@ -87,6 +87,31 @@ router.post('/',
     });
 
 /**
+ * Get a user by username
+ * @route GET /users/:userName
+ * @group Users - Operations related to users
+ * @returns {object} 200 - The user object
+ * @returns {Error} 404 - User not found
+ */
+router.get('/:userName', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  if (req.user.Username !== req.params.userName) {
+    return res.status(403).send('You are not authorized to access this user');
+  }
+
+  try {
+    const user = await Users.findOne({ Username: req.params.userName });
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+    res.json(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error: ' + err);
+  }
+});
+
+
+/**
  * Updates a user's information (including username)
  * @route PUT /users/:userName
  * @group Users - Operations related to users
