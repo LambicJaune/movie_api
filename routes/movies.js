@@ -191,7 +191,7 @@ router.get('/directors/:directorName', passport.authenticate('jwt', { session: f
  *       "featured": true
  *     }
  */
-router.get('/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.get('/:title', passport.authenticate('jwt', { session: false }), async (req, res) => {
     await Movies.findOne({ title: req.params.title })
         .then((movie) => {
             res.status(200).json(movie);
