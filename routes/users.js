@@ -36,55 +36,50 @@ const { check, validationResult } = require('express-validator');
  *       "FavoriteMovies": ["68639866fdce14bfc0748a5f", "68639866fdce14bfc0748a60"]
  *     }
  */
-router.post('/',
-    // Validation logic here for request
-    //you can either use a chain of methods like .not().isEmpty()
-    //which means "opposite of isEmpty" in plain english "is not empty"
-    //or use .isLength({min: 5}) which means
-    //minimum value of 5 characters are only allowed
-    [
-        check('Username', 'Username is required').isLength({ min: 5 }),
-        check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
-        check('Password', 'Password is required').not().isEmpty(),
-        check('Password', 'Password cannot contain spaces').matches(/^\S+$/),
-        check('Email', 'Email does not appear to be valid').isEmail()
-    ], async (req, res) => {
+router.post(
+  '/',
+  [
+    check('Username', 'Username is required').isLength({ min: 5 }),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Password', 'Password cannot contain spaces').matches(/^\S+$/),
+    check('Email', 'Email does not appear to be valid').isEmail()
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
 
-        // check the validation object for errors
-        const errors = validationResult(req);
+    try {
+      const existingUsername = await Users.findOne({ Username: req.body.Username });
+      if (existingUsername) {
+        return res.status(400).json({ message: 'Username already exists' });
+      }
 
-        if (!errors.isEmpty()) {
-            return res.status(422).json({ errors: errors.array() });
-        }
+      const existingEmail = await Users.findOne({ Email: req.body.Email });
+      if (existingEmail) {
+        return res.status(400).json({ message: 'Email address is already taken' });
+      }
 
-        let hashedPassword = Users.hashPassword(req.body.Password);
-        await Users.findOne({ Username: req.body.Username })
-            .then((user) => {
-                if (user) {
-                    return res.status(400).send(req.body.Username + ' already exists');
-                } else {
-                    Users
-                        .create({
-                            Username: req.body.Username,
-                            Password: hashedPassword,
-                            Email: req.body.Email,
-                            Birthday: req.body.Birthday,
-                        })
-                        .then((user) => {
-                            const userResponse = lodash.pick(user.toObject(), ['Username', 'Email', 'Birthday']);
-                            res.status(201).json(userResponse)
-                        })
-                        .catch((error) => {
-                            console.error(error);
-                            res.status(500).send('Error: ' + error);
-                        })
-                }
-            })
-            .catch((error) => {
-                console.error(error);
-                res.status(500).send('Error: ' + error);
-            })
-    });
+      const hashedPassword = Users.hashPassword(req.body.Password);
+
+      const newUser = await Users.create({
+        Username: req.body.Username,
+        Password: hashedPassword,
+        Email: req.body.Email,
+        Birthday: req.body.Birthday
+      });
+
+      const userResponse = lodash.pick(newUser.toObject(), ['Username', 'Email', 'Birthday']);
+      return res.status(201).json(userResponse);
+
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send('Error: ' + error);
+    }
+  }
+);
 
 /**
  * Get a user by username
