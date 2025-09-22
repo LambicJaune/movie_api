@@ -202,5 +202,4 @@ router.get('/:title', passport.authenticate('jwt', { session: false }), async (r
         });
 });
 
-
 module.exports = router;
