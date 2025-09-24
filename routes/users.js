@@ -181,8 +181,8 @@ router.put(
             return res.status(200).json({ user: updatedUserResponse, token });
 
         } catch (err) {
-            console.error(err);
-            return res.status(500).json({ message: err.message });
+            console.error('PUT /users/:userName error:', err);
+            return res.status(500).json({ message: err.message, stack: err.stack });
         }
     }
 );
