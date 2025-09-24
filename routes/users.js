@@ -6,6 +6,7 @@ const lodash = require('lodash');
 const passport = require('passport');
 const { check, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
+const jwtSecret = 'your_jwt_secret'; // same as auth.js
 
 /**
  * Registers/adds a new user
@@ -188,14 +189,18 @@ router.put(
             // Remove password before sending response
             const updatedUserResponse = lodash.omit(updatedUser.toObject(), ['Password']);
 
-            // generate new JWT
+            // generate new JWT token
             const token = jwt.sign(
-                { _id: updatedUserResponse._id, Username: updatedUserResponse.Username },
-                process.env.JWT_SECRET,
+                { _id: updatedUser._id, Username: updatedUser.Username },
+                jwtSecret,
                 { expiresIn: '7d' }
             );
 
-            return res.status(200).json({ user: updatedUserResponse, token });
+            res.status(200).json({
+                user: updatedUser,
+                token: token
+            });
+
 
         } catch (err) {
             console.error('PUT /users/:userName error:', err);
