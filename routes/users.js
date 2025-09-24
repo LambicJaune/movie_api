@@ -160,11 +160,15 @@ router.put(
             if (req.body.Email) updateData.Email = req.body.Email;
             if (req.body.Birthday) updateData.Birthday = req.body.Birthday;
 
+            console.log('Updating user:', req.params.userName, 'with data:', updateData);
+
             const updatedUser = await Users.findOneAndUpdate(
                 { Username: req.params.userName },
                 { $set: updateData },
                 { new: true, runValidators: true }
             );
+
+            console.log('Updated user:', updatedUser);
 
             if (!updatedUser) return res.status(404).json({ message: 'User not found' });
 
