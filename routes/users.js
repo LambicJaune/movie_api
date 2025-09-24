@@ -154,6 +154,11 @@ router.put(
         if (!errors.isEmpty()) return res.status(422).json({ errors: errors.array() });
 
         try {
+            // Ensure logged-in user is editing their own account
+            if (req.user.Username !== req.params.userName) {
+                return res.status(403).json({ message: 'You can only update your own account' });
+            }
+
             const updateData = {};
             if (req.body.Username) updateData.Username = req.body.Username;
             if (req.body.Password) updateData.Password = Users.hashPassword(req.body.Password);
@@ -162,8 +167,16 @@ router.put(
 
             console.log('Updating user:', req.params.userName, 'with data:', updateData);
 
-            const updatedUser = await Users.findOneAndUpdate(
-                { Username: req.params.userName },
+            // Check if username update is requested and the new username is already taken
+            if (updateData.Username) {
+                const existingUser = await Users.findOne({ Username: updateData.Username });
+                if (existingUser && existingUser._id.toString() !== req.user._id.toString()) {
+                    return res.status(400).json({ message: 'Username already exists' });
+                }
+            }
+
+            const updatedUser = await Users.findByIdAndUpdate(
+                req.user._id,         // Always update by _id, never by username
                 { $set: updateData },
                 { new: true, runValidators: true }
             );
@@ -190,6 +203,7 @@ router.put(
         }
     }
 );
+
 
 
 
