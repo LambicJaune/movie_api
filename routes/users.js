@@ -37,48 +37,48 @@ const { check, validationResult } = require('express-validator');
  *     }
  */
 router.post(
-  '/',
-  [
-    check('Username', 'Username is required').isLength({ min: 5 }),
-    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
-    check('Password', 'Password is required').not().isEmpty(),
-    check('Password', 'Password cannot contain spaces').matches(/^\S+$/),
-    check('Email', 'Email does not appear to be valid').isEmail()
-  ],
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
+    '/',
+    [
+        check('Username', 'Username is required').isLength({ min: 5 }),
+        check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+        check('Password', 'Password is required').not().isEmpty(),
+        check('Password', 'Password cannot contain spaces').matches(/^\S+$/),
+        check('Email', 'Email does not appear to be valid').isEmail()
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() });
+        }
+
+        try {
+            const existingUsername = await Users.findOne({ Username: req.body.Username });
+            if (existingUsername) {
+                return res.status(400).json({ message: 'Username already exists' });
+            }
+
+            const existingEmail = await Users.findOne({ Email: req.body.Email });
+            if (existingEmail) {
+                return res.status(400).json({ message: 'Email address is already taken' });
+            }
+
+            const hashedPassword = Users.hashPassword(req.body.Password);
+
+            const newUser = await Users.create({
+                Username: req.body.Username,
+                Password: hashedPassword,
+                Email: req.body.Email,
+                Birthday: req.body.Birthday
+            });
+
+            const userResponse = lodash.pick(newUser.toObject(), ['Username', 'Email', 'Birthday']);
+            return res.status(201).json(userResponse);
+
+        } catch (error) {
+            console.error(error);
+            return res.status(500).send('Error: ' + error);
+        }
     }
-
-    try {
-      const existingUsername = await Users.findOne({ Username: req.body.Username });
-      if (existingUsername) {
-        return res.status(400).json({ message: 'Username already exists' });
-      }
-
-      const existingEmail = await Users.findOne({ Email: req.body.Email });
-      if (existingEmail) {
-        return res.status(400).json({ message: 'Email address is already taken' });
-      }
-
-      const hashedPassword = Users.hashPassword(req.body.Password);
-
-      const newUser = await Users.create({
-        Username: req.body.Username,
-        Password: hashedPassword,
-        Email: req.body.Email,
-        Birthday: req.body.Birthday
-      });
-
-      const userResponse = lodash.pick(newUser.toObject(), ['Username', 'Email', 'Birthday']);
-      return res.status(201).json(userResponse);
-
-    } catch (error) {
-      console.error(error);
-      return res.status(500).send('Error: ' + error);
-    }
-  }
 );
 
 /**
@@ -89,20 +89,24 @@ router.post(
  * @returns {Error} 404 - User not found
  */
 router.get('/:userName', passport.authenticate('jwt', { session: false }), async (req, res) => {
-  if (req.user.Username !== req.params.userName) {
-    return res.status(403).send('You are not authorized to access this user');
-  }
-
-  try {
-    const user = await Users.findOne({ Username: req.params.userName });
-    if (!user) {
-      return res.status(404).send('User not found');
+    if (req.user.Username !== req.params.userName) {
+        return res.status(403).send('You are not authorized to access this user');
     }
-    res.json(user);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error: ' + err);
-  }
+
+    try {
+        const user = await Users.findOne({ Username: req.params.userName });
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        // Remove password before sending response
+        const userResponse = lodash.omit(user.toObject(), ['Password']);
+        res.json(userResponse);
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+    }
 });
 
 
@@ -135,49 +139,44 @@ router.get('/:userName', passport.authenticate('jwt', { session: false }), async
  *       "FavoriteMovies": ["68639866fdce14bfc0748a5f"]
  *     }
  */
-router.put('/:userName', passport.authenticate('jwt', { session: false }),
-    // Validation logic here for request
-    //you can either use a chain of methods like .not().isEmpty()
-    //which means "opposite of isEmpty" in plain english "is not empty"
-    //or use .isLength({min: 5}) which means
-    //minimum value of 5 characters are only allowed
+router.put(
+    '/:userName',
+    passport.authenticate('jwt', { session: false }),
     [
-        check('Username', 'Username is required').isLength({ min: 5 }),
-        check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
-        check('Password', 'Password is required').not().isEmpty(),
-        check('Email', 'Email does not appear to be valid').isEmail()
-    ], async (req, res) => {
-
-        // check the validation object for errors
+        check('Username').optional().isLength({ min: 5 }).withMessage('Username too short')
+            .isAlphanumeric().withMessage('Username must be alphanumeric'),
+        check('Password').optional().matches(/^\S+$/).withMessage('Password cannot contain spaces'),
+        check('Email').optional().isEmail().withMessage('Invalid email'),
+    ],
+    async (req, res) => {
         const errors = validationResult(req);
+        if (!errors.isEmpty()) return res.status(422).json({ errors: errors.array() });
 
-        if (!errors.isEmpty()) {
-            return res.status(422).json({ errors: errors.array() });
+        try {
+            const updateData = {};
+            if (req.body.Username) updateData.Username = req.body.Username;
+            if (req.body.Password) updateData.Password = Users.hashPassword(req.body.Password);
+            if (req.body.Email) updateData.Email = req.body.Email;
+            if (req.body.Birthday) updateData.Birthday = req.body.Birthday;
+
+            const updatedUser = await Users.findOneAndUpdate(
+                { Username: req.params.userName },
+                { $set: updateData },
+                { new: true, runValidators: true }
+            );
+
+            if (!updatedUser) return res.status(404).json({ message: 'User not found' });
+
+            // Remove password before sending response
+            const updatedUserResponse = lodash.omit(updatedUser.toObject(), ['Password']);
+            return res.status(200).json(updatedUserResponse);
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ message: err.message });
         }
+    }
+);
 
-        // condition to make sure that the username in the request body matches the one in the request parameter
-        if (req.user.Username !== req.params.userName) {
-            return res.status(400).send('Permission denied');
-        } //end of the condition 
-        await Users.findOneAndUpdate({ Username: req.params.userName }, {
-            $set:
-            {
-                Username: req.body.Username,
-                Password: Users.hashPassword(req.body.Password),
-                Email: req.body.Email,
-                Birthday: req.body.Birthday,
-                FavoriteMovies: req.body.FavoriteMovies
-            }
-        },
-            { new: true }) // This line makes sure that the updated document is returned
-            .then((updatedUser) => {
-                res.json(updatedUser);
-            })
-            .catch((err) => {
-                console.error(err);
-                res.status(500).send('Error: ' + err);
-            });
-    });
 
 
 /**
