@@ -190,7 +190,7 @@ router.put(
 
             // generate new JWT
             const token = jwt.sign(
-                { Username: updatedUserResponse.Username },
+                { _id: updatedUserResponse._id, Username: updatedUserResponse.Username },
                 process.env.JWT_SECRET,
                 { expiresIn: '7d' }
             );
